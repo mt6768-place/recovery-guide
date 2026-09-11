@@ -1,59 +1,57 @@
 # recovery-guide
 
-Todo lo necesario para construir y entender **OrangeFox R12.0** en Xiaomi
-**merlinx** (Redmi Note 9 / Redmi 10X 4G, MT6768) sobre una ROM de
-**vendor S** / Android 17.
+Everything needed to build and understand **OrangeFox R12.0** on the Xiaomi
+**merlinx** (Redmi Note 9 / Redmi 10X 4G, MT6768) against an **S vendor** /
+Android 17 ROM.
 
-## La documentacion esta en la wiki
+## Documentation
 
-👉 **[Ir a la wiki](../../wiki)**
+Full write-up in the [wiki](../../wiki), mirrored in [`docs/`](docs/):
 
-| Pagina | Contenido |
+| Page | Contents |
 |---|---|
-| [Compilar OrangeFox](../../wiki/Compilar-OrangeFox) | sync, parches, build, trampas |
-| [Descifrado FBE](../../wiki/Descifrado-FBE) | keymaster S, PIN/patron y sin credencial |
-| [USB, MTP y adb](../../wiki/USB-MTP-y-adb) | reglas del gadget, sideload, VID/PID |
-| [Instalar ROMs](../../wiki/Instalar-ROMs) | particiones dinamicas, vbmeta, firmware |
-| [Problemas conocidos](../../wiki/Problemas-conocidos) | lo que no tiene arreglo y por que |
+| [Index](docs/Index.md) | overview |
+| [Building OrangeFox](docs/Building-OrangeFox.md) | sync, patches, build, traps |
+| [FBE decryption](docs/FBE-decryption.md) | S-vendor keymaster, PIN/pattern, no credential |
+| [USB, MTP and adb](docs/USB-MTP-and-adb.md) | gadget rules, sideload, VID/PID |
+| [Installing ROMs](docs/Installing-ROMs.md) | dynamic partitions, vbmeta, firmware |
+| [Known issues](docs/Known-issues.md) | what has no clean fix, and why |
 
-## Repos que hacen falta
+## Repositories involved
 
-| Que | Donde | Rama |
+| What | Where | Branch |
 |---|---|---|
-| Device tree del recovery | [`recovery_device_xiaomi_merlinx`](https://github.com/mt6768-place/recovery_device_xiaomi_merlinx) | `recovery-12.1` |
-| Scripts, manifests y parches | [`mt6768-place-guide`](https://github.com/mt6768-place/mt6768-place-guide/tree/recovery) | `recovery` |
-| Resto del arbol | `gitlab.com/OrangeFox/sync` | `fox_12.1` |
+| Recovery device tree | [`recovery_device_xiaomi_merlinx`](https://github.com/mt6768-place/recovery_device_xiaomi_merlinx) | `recovery-12.1` |
+| Scripts, manifests, patches | [`mt6768-place-guide`](https://github.com/mt6768-place/mt6768-place-guide/tree/recovery) | `recovery` |
+| Everything else | `gitlab.com/OrangeFox/sync` | `fox_12.1` |
 
-El device tree del recovery es **un repo aparte** del de la ROM. Comparten la
-ruta `device/xiaomi/merlinx` dentro de sus respectivos arboles, pero no tienen
-nada que ver entre si.
+The recovery device tree is **a separate repository** from the ROM one. They
+share the path `device/xiaomi/merlinx` inside their respective trees but are
+unrelated.
 
-## Compilar en tres ordenes
+## Build in three commands
 
 ```bash
-git clone https://github.com/mt6768-place/mt6768-place-guide -b recovery guia
-bash guia/scripts/sync.sh ~/fox_12.1
-bash guia/scripts/apply-patches.sh ~/fox_12.1
-bash guia/scripts/build.sh ~/fox_12.1
+git clone https://github.com/mt6768-place/mt6768-place-guide -b recovery guide
+bash guide/scripts/sync.sh ~/fox_12.1
+bash guide/scripts/apply-patches.sh ~/fox_12.1
+bash guide/scripts/build.sh ~/fox_12.1
 ```
 
-## Que incluye el recovery
+## What it ships
 
-- Descifrado FBE con PIN, patron, contrasena **y sin credencial**
-- MTP y adb **a la vez**; `adb sideload` que cierra correctamente
-- Instalacion de ROMs completas con particiones dinamicas
-- Magisk, AromaFM, addon init.d, borrado de **FRP**, lptools, nano, bash
+- FBE decryption with PIN, pattern, password **and no credential at all**
+- MTP and adb **at the same time**; `adb sideload` that exits cleanly
+- Installing full ROMs with dynamic partitions
+- Magisk, AromaFM, init.d addon, **FRP** erase addon, lptools, nano, bash
 - **Flash Current OrangeFox**
 
----
+## Upstreamable fixes
 
-## Copia en este repo
+Two of the patches are genuine bugs in upstream code, worth sending on their
+own merit rather than carrying here forever:
 
-Las mismas paginas estan en [`docs/`](docs/) por si prefieres leerlas aqui:
-
-- [Indice](docs/Indice.md)
-- [Compilar OrangeFox](docs/Compilar-OrangeFox.md)
-- [Descifrado FBE](docs/Descifrado-FBE.md)
-- [USB, MTP y adb](docs/USB-MTP-y-adb.md)
-- [Instalar ROMs](docs/Instalar-ROMs.md)
-- [Problemas conocidos](docs/Problemas-conocidos.md)
+- `system/vold`: an uninitialised token buffer and an unchecked AES-GCM tag in
+  the FBE path
+- `system/tools/aidl`: an uninitialised pointer that crashes on every
+  parameterised annotation
