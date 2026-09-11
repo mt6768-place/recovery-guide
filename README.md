@@ -44,3 +44,16 @@ bash guia/scripts/build.sh ~/fox_12.1
 - Instalacion de ROMs completas con particiones dinamicas
 - Magisk, AromaFM, addon init.d, borrado de **FRP**, lptools, nano, bash
 - **Flash Current OrangeFox**
+
+---
+
+## Copia en este repo
+
+Las mismas paginas estan en [`docs/`](docs/) por si prefieres leerlas aqui:
+
+- [Indice](docs/Indice.md)
+- [Compilar OrangeFox](docs/Compilar-OrangeFox.md)
+- [Descifrado FBE](docs/Descifrado-FBE.md)
+- [USB, MTP y adb](docs/USB-MTP-y-adb.md)
+- [Instalar ROMs](docs/Instalar-ROMs.md)
+- [Problemas conocidos](docs/Problemas-conocidos.md)
